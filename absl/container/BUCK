@@ -1,0 +1,288 @@
+cxx_library(
+    name = "compressed_tuple",
+    exported_headers = ["internal/compressed_tuple.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "fixed_array",
+    exported_headers = ["fixed_array.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":compressed_tuple",
+        "//absl/algorithm:algorithm",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/base:throw_delegate",
+        "//absl/memory:memory",
+    ],
+)
+
+cxx_library(
+    name = "inlined_vector_internal",
+    exported_headers = ["internal/inlined_vector.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":compressed_tuple",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "inlined_vector",
+    exported_headers = ["inlined_vector.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":inlined_vector_internal",
+        "//absl/algorithm:algorithm",
+        "//absl/base:core_headers",
+        "//absl/base:throw_delegate",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+    ],
+)
+
+cxx_library(
+    name = "flat_hash_map",
+    exported_headers = ["flat_hash_map.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":container_memory",
+        ":hash_function_defaults",
+        ":raw_hash_map",
+        "//absl/algorithm:container",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+    ],
+)
+
+cxx_library(
+    name = "flat_hash_set",
+    exported_headers = ["flat_hash_set.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":container_memory",
+        ":hash_function_defaults",
+        ":raw_hash_set",
+        "//absl/algorithm:container",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+    ],
+)
+
+cxx_library(
+    name = "node_hash_map",
+    exported_headers = ["node_hash_map.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":container_memory",
+        ":hash_function_defaults",
+        ":node_slot_policy",
+        ":raw_hash_map",
+        "//absl/algorithm:container",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+    ],
+)
+
+cxx_library(
+    name = "node_hash_set",
+    exported_headers = ["node_hash_set.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":hash_function_defaults",
+        ":node_slot_policy",
+        ":raw_hash_set",
+        "//absl/algorithm:container",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+    ],
+)
+
+
+cxx_library(
+    name = "container_memory",
+    exported_headers = ["internal/container_memory.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "hash_function_defaults",
+    exported_headers = ["internal/hash_function_defaults.h"],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/hash:hash",
+        "//absl/strings:strings",
+        "//absl/strings:cord",
+    ],
+)
+
+cxx_library(
+    name = "hash_policy_traits",
+    exported_headers = ["internal/hash_policy_traits.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":common_policy_traits",
+        "//absl/meta:type_traits",
+    ],
+)
+
+cxx_library(
+    name = "common_policy_traits",
+    exported_headers = ["internal/common_policy_traits.h"],
+    exported_deps = ["//absl/meta:type_traits"],
+)
+
+cxx_library(
+    name = "hashtable_debug",
+    exported_headers = ["internal/hashtable_debug.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":hashtable_debug_hooks",
+    ],
+)
+
+cxx_library(
+    name = "hashtable_debug_hooks",
+    exported_headers = ["internal/hashtable_debug_hooks.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/base:config",
+    ],
+)
+
+cxx_library(
+    name = "hashtablez_sampler",
+    srcs = [
+        "internal/hashtablez_sampler.cc",
+        "internal/hashtablez_sampler_force_weak_definition.cc",
+    ],
+    exported_headers = ["internal/hashtablez_sampler.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/debugging:stacktrace",
+        "//absl/memory:memory",
+        "//absl/profiling:exponential_biased",
+        "//absl/profiling:sample_recorder",
+        "//absl/synchronization:synchronization",
+        "//absl/time:time",
+        "//absl/utility:utility",
+    ],
+)
+
+
+cxx_library(
+    name = "node_slot_policy",
+    exported_headers = ["internal/node_slot_policy.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = ["//absl/base:config"],
+)
+
+
+cxx_library(
+    name = "raw_hash_map",
+    exported_headers = ["internal/raw_hash_map.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":container_memory",
+        ":raw_hash_set",
+        "//absl/base:throw_delegate",
+    ],
+)
+
+cxx_library(
+    name = "common",
+    exported_headers = ["internal/common.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/meta:type_traits",
+        "//absl/types:optional",
+    ],
+)
+
+cxx_library(
+    name = "raw_hash_set",
+    srcs = ["internal/raw_hash_set.cc"],
+    exported_headers = ["internal/raw_hash_set.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":common",
+        ":compressed_tuple",
+        ":container_memory",
+        ":hash_policy_traits",
+        ":hashtable_debug_hooks",
+        ":hashtablez_sampler",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/base:endian",
+        "//absl/base:prefetch",
+        "//absl/base:raw_logging_internal",
+        "//absl/hash:hash",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/numeric:bits",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "layout",
+    exported_headers = ["internal/layout.h"],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+        "//absl/strings:strings",
+        "//absl/types:span",
+        "//absl/utility:utility",
+    ],
+)
+
+
+cxx_library(
+    name = "btree",
+    headers = [
+    ],
+    exported_headers = [
+        "internal/btree.h",
+        "internal/btree_container.h",
+        "btree_map.h",
+        "btree_set.h",
+    ],
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":common",
+        ":common_policy_traits",
+        ":compressed_tuple",
+        ":container_memory",
+        ":layout",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/base:throw_delegate",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/strings:strings",
+        "//absl/strings:cord",
+        "//absl/types:compare",
+        "//absl/utility:utility",
+    ],
+)

@@ -1,0 +1,31 @@
+cxx_library(
+    name = "time",
+    srcs = [
+        "civil_time.cc",
+        "clock.cc",
+        "duration.cc",
+        "format.cc",
+        "time.cc",
+    ],
+    exported_headers = [
+        "internal/get_current_time_chrono.inc",
+        "internal/get_current_time_posix.inc",
+        "civil_time.h",
+        "clock.h",
+        "time.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/numeric:int128",
+        "//absl/strings:strings",
+        "//absl/time/internal/cctz:civil_time",
+        "//absl/time/internal/cctz:time_zone",
+        "//absl/types:optional",
+    ],
+)

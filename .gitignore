@@ -13,3 +13,7 @@ CMakeLists.txt.user
 # Ignore generated python artifacts
 *.pyc
 copts/__pycache__/
+# Ignore buck2 out directory
+/buck-out
+# This project will never be a root
+/.buckroot

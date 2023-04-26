@@ -1,0 +1,94 @@
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+
+cxx_library(
+    name = "status",
+    srcs = [
+        "status.cc",
+        "status_payload_printer.cc",
+    ],
+    headers = [
+    ],
+    exported_headers = [
+        "internal/status_internal.h",
+        "status.h",
+        "status_payload_printer.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:atomic_hook",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/base:strerror",
+        "//absl/container:inlined_vector",
+        "//absl/debugging:stacktrace",
+        "//absl/debugging:symbolize",
+        "//absl/functional:function_ref",
+        "//absl/strings:strings",
+        "//absl/strings:cord",
+        "//absl/strings:str_format",
+        "//absl/types:optional",
+    ],
+)
+#
+#cc_test(
+#    name = "status_test",
+#    srcs = ["status_test.cc"],
+#    copts = ABSL_TEST_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+#    exported_deps =  [
+#        ":status",
+#        "//absl/strings",
+#        "@com_google_googletest//:gtest_main",
+#    ],
+#)
+#
+cxx_library(
+    name = "statusor",
+    srcs = [
+        "statusor.cc",
+    ],
+    headers = [
+        "internal/statusor_internal.h",
+    ],
+    exported_headers = [
+
+        "statusor.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":status",
+        "//absl/base:base",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/meta:type_traits",
+        "//absl/strings:strings",
+        "//absl/types:variant",
+        "//absl/utility:utility",
+    ],
+)
+
+#
+#cc_test(
+#    name = "statusor_test",
+#    size = "small",
+#    srcs = ["statusor_test.cc"],
+#    exported_deps =  [
+#        ":status",
+#        ":statusor",
+#        "//absl/base",
+#        "//absl/memory",
+#        "//absl/strings",
+#        "//absl/types:any",
+#        "//absl/utility",
+#        "@com_google_googletest//:gtest_main",
+#    ],
+#)

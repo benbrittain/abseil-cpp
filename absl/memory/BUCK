@@ -1,0 +1,30 @@
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+
+cxx_library(
+    name = "memory",
+    exported_headers = ["memory.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+    ],
+)
+
+#cc_test(
+#    name = "memory_test",
+#    srcs = ["memory_test.cc"],
+#    copts = ABSL_TEST_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+#    deps = [
+#        ":memory",
+#        "//absl/base:core_headers",
+#        "@com_google_googletest//:gtest_main",
+#    ],
+#)

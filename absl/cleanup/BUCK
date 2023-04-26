@@ -1,0 +1,26 @@
+cxx_library(
+    name = "cleanup_internal",
+    exported_headers = ["internal/cleanup.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/base:base_internal",
+        "//absl/base:core_headers",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "cleanup",
+    exported_headers = [
+        "cleanup.h",
+    ],
+#    copts = ABSL_DEFAULT_COPTS,
+visibility = ["PUBLIC"],
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":cleanup_internal",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)

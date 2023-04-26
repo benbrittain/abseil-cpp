@@ -1,0 +1,277 @@
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+
+cxx_library(
+    name = "check_impl",
+    exported_headers = ["check_impl.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":check_op",
+        ":conditions",
+        ":log_message",
+        ":strip",
+        "//absl/base:core_headers",
+    ],
+)
+
+cxx_library(
+    name = "check_op",
+    srcs = ["check_op.cc"],
+    exported_headers = ["check_op.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = [
+        "//absl/log/...",
+    ],
+    exported_deps =  [
+        ":nullguard",
+        ":nullstream",
+        ":strip",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_library(
+    name = "conditions",
+    srcs = ["conditions.cc"],
+    exported_headers = ["conditions.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":voidify",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)
+
+cxx_library(
+    name = "config",
+    exported_headers = ["config.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)
+
+cxx_library(
+    name = "flags",
+    exported_headers = ["flags.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/flags:flag",
+    ],
+)
+
+cxx_library(
+    name = "format",
+    srcs = ["log_format.cc"],
+    exported_headers = ["log_format.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":append_truncated",
+        ":config",
+        ":globals",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/strings:strings",
+        "//absl/strings:str_format",
+        "//absl/time:time",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "globals",
+    srcs = ["globals.cc"],
+    exported_headers = ["globals.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+        "//absl/time:time",
+    ],
+)
+
+cxx_library(
+    name = "log_impl",
+    exported_headers = ["log_impl.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":conditions",
+        ":log_message",
+        ":strip",
+    ],
+)
+
+cxx_library(
+    name = "log_message",
+    srcs = ["log_message.cc"],
+    exported_headers = ["log_message.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "//absl/log/..." ],
+    exported_deps =  [
+        ":append_truncated",
+        ":format",
+        ":globals",
+        ":log_sink_set",
+        ":nullguard",
+        ":proto",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:errno_saver",
+        "//absl/base:log_severity",
+        "//absl/base:raw_logging_internal",
+        "//absl/base:strerror",
+        "//absl/container:inlined_vector",
+        "//absl/debugging:examine_stack",
+        "//absl/log:globals",
+        "//absl/log:log_entry",
+        "//absl/log:log_sink",
+        "//absl/log:log_sink_registry",
+        "//absl/memory:memory",
+        "//absl/strings:strings",
+        "//absl/time:time",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "append_truncated",
+    exported_headers = ["append_truncated.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/strings:strings",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "log_sink_set",
+    srcs = ["log_sink_set.cc"],
+    exported_headers = ["log_sink_set.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS + select({
+#        "//conditions:default": [],
+#        "@platforms//os:android": ["-llog"],
+#    }),
+    exported_deps =  [
+        ":config",
+        ":globals",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/base:raw_logging_internal",
+        "//absl/cleanup:cleanup",
+        "//absl/log:globals",
+        "//absl/log:log_entry",
+        "//absl/log:log_sink",
+        "//absl/strings:strings",
+        "//absl/synchronization:synchronization",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "nullguard",
+    srcs = ["nullguard.cc"],
+    exported_headers = ["nullguard.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)
+
+cxx_library(
+    name = "nullstream",
+    exported_headers = ["nullstream.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_library(
+    name = "strip",
+    exported_headers = ["strip.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":log_message",
+        ":nullstream",
+        "//absl/base:log_severity",
+    ],
+)
+
+cxx_library(
+    name = "structured",
+    exported_headers = ["structured.h"],
+    visibility = [ "//absl/log/..." ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":log_message",
+        "//absl/base:config",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_library(
+    name = "voidify",
+    exported_headers = ["voidify.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  ["//absl/base:config"],
+)
+
+cxx_library(
+    name = "proto",
+    srcs = ["proto.cc"],
+    exported_headers = ["proto.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/strings:strings",
+        "//absl/types:span",
+    ],
+)

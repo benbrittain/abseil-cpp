@@ -1,0 +1,57 @@
+cxx_library(
+    name = "hash",
+    srcs = [
+        "internal/hash.cc",
+    ],
+    exported_headers = ["hash.h",
+                    "internal/hash.h",
+                    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":city",
+        ":low_level_hash",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:endian",
+        "//absl/container:fixed_array",
+        "//absl/functional:function_ref",
+        "//absl/meta:type_traits",
+        "//absl/numeric:bits",
+        "//absl/numeric:int128",
+        "//absl/strings:strings",
+        "//absl/types:optional",
+        "//absl/types:variant",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "city",
+    srcs = ["internal/city.cc"],
+    exported_headers = [
+        "internal/city.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:endian",
+    ],
+)
+
+cxx_library(
+    name = "low_level_hash",
+    srcs = ["internal/low_level_hash.cc"],
+    exported_headers = ["internal/low_level_hash.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:endian",
+        "//absl/numeric:int128",
+    ],
+)

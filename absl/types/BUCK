@@ -1,0 +1,144 @@
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+#
+#package(default_visibility = ["//visibility:public"])
+#
+#licenses(["notice"])
+
+cxx_library(
+    name = "any",
+    exported_headers = ["any.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        ":bad_any_cast",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:fast_type_id",
+        "//absl/meta:type_traits",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "bad_any_cast",
+    exported_headers = ["bad_any_cast.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":bad_any_cast_impl",
+        "//absl/base:config",
+    ],
+)
+
+cxx_library(
+    name = "bad_any_cast_impl",
+    srcs = [
+        "bad_any_cast.cc",
+    ],
+    headers = [
+        "bad_any_cast.h",
+        ],
+    #    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "span",
+    exported_headers = [
+        "internal/span.h",
+        "span.h",
+    ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        "//absl/algorithm:algorithm",
+        "//absl/base:core_headers",
+        "//absl/base:throw_delegate",
+        "//absl/meta:type_traits",
+    ],
+)
+
+cxx_library(
+    name = "optional",
+    headers = ["internal/optional.h"],
+    exported_headers = ["optional.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        ":bad_optional_access",
+        "//absl/base:base_internal",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "bad_optional_access",
+    srcs = ["bad_optional_access.cc"],
+    exported_headers = ["bad_optional_access.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "bad_variant_access",
+    srcs = ["bad_variant_access.cc"],
+    visibility = ["PUBLIC"],
+    exported_headers = ["bad_variant_access.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "variant",
+    headers = ["internal/variant.h"],
+    exported_headers = ["variant.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":bad_variant_access",
+        "//absl/base:base_internal",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "compare",
+    exported_headers = ["compare.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+    ],
+)

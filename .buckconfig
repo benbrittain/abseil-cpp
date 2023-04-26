@@ -1,0 +1,24 @@
+[repositories]
+abseil = .
+prelude = prelude
+toolchains = toolchains
+none = none
+
+[project]
+ignore = .git
+
+[repository_aliases]
+config = prelude
+buck = none
+fbcode = none
+fbsource = none
+
+[parser]
+target_platform_detector_spec = target:abseil//...->prelude//platforms:default
+
+[repositories]
+prelude = prelude
+fbsource = none
+fbcode = none
+toolchains = toolchains
+

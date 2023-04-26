@@ -1,0 +1,22 @@
+#
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+#
+#package(default_visibility = ["//visibility:public"])
+#
+#licenses(["notice"])
+
+cxx_library(
+    name = "type_traits",
+    exported_headers = ["type_traits.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//absl/base:config",
+    ],
+)

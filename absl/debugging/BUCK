@@ -1,0 +1,157 @@
+cxx_library(
+    name = "stacktrace",
+    srcs = [
+        "stacktrace.cc",
+    ],
+    exported_headers = ["stacktrace.h",
+
+        "internal/stacktrace_aarch64-inl.inc",
+        "internal/stacktrace_arm-inl.inc",
+        "internal/stacktrace_config.h",
+        "internal/stacktrace_emscripten-inl.inc",
+        "internal/stacktrace_generic-inl.inc",
+        "internal/stacktrace_powerpc-inl.inc",
+        "internal/stacktrace_riscv-inl.inc",
+        "internal/stacktrace_unimplemented-inl.inc",
+        "internal/stacktrace_win32-inl.inc",
+        "internal/stacktrace_x86-inl.inc",
+
+                        ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":debugging_internal",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "symbolize",
+    srcs = [
+        "symbolize.cc",
+    ],
+    visibility = ["PUBLIC"],
+    exported_headers = [
+        "symbolize_darwin.inc",
+        "symbolize_elf.inc",
+        "symbolize_emscripten.inc",
+        "symbolize_unimplemented.inc",
+        "symbolize_win32.inc",
+        "internal/symbolize.h",
+        "symbolize.h",
+    ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS + select({
+#        "//absl:msvc_compiler": ["-DEFAULTLIB:dbghelp.lib"],
+#        "//absl:clang-cl_compiler": ["-DEFAULTLIB:dbghelp.lib"],
+#        "//absl:mingw_compiler": [
+#            "-DEFAULTLIB:dbghelp.lib",
+#            "-ldbghelp",
+#        ],
+#        "//conditions:default": [],
+#    }),
+    exported_deps =  [
+        ":debugging_internal",
+        ":demangle_internal",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/base:malloc_internal",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_library(
+    name = "examine_stack",
+    srcs = [
+        "internal/examine_stack.cc",
+    ],
+    exported_headers = [
+        "internal/examine_stack.h",
+    ],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/log/internal/..."],
+    exported_deps =  [
+        ":stacktrace",
+        ":symbolize",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "failure_signal_handler",
+    srcs = ["failure_signal_handler.cc"],
+    exported_headers = ["failure_signal_handler.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":examine_stack",
+        ":stacktrace",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+
+cxx_library(
+    name = "debugging_internal",
+    srcs = [
+        "internal/address_is_readable.cc",
+        "internal/elf_mem_image.cc",
+        "internal/vdso_support.cc",
+    ],
+    exported_headers = [
+        "internal/address_is_readable.h",
+        "internal/elf_mem_image.h",
+        "internal/vdso_support.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+#    visibility = ["//visibility:private"],
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/base:errno_saver",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "demangle_internal",
+    srcs = ["internal/demangle.cc"],
+    exported_headers = ["internal/demangle.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)
+
+cxx_library(
+    name = "leak_check",
+    srcs = ["leak_check.cc"],
+    exported_headers = ["leak_check.h"],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+    ],
+)

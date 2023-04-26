@@ -1,0 +1,36 @@
+#load(
+#    "//absl:copts/configure_copts.bzl",
+#    "ABSL_DEFAULT_COPTS",
+#    "ABSL_DEFAULT_LINKOPTS",
+#    "ABSL_TEST_COPTS",
+#)
+#
+#package(default_visibility = ["//visibility:public"])
+#
+#licenses(["notice"])
+
+cxx_library(
+    name = "algorithm",
+    exported_headers = ["algorithm.h"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps =  [
+        "//absl/base:config",
+    ],
+)
+
+cxx_library(
+    name = "container",
+    exported_headers = [
+        "container.h",
+    ],
+    visibility = ["PUBLIC"],
+#    copts = ABSL_DEFAULT_COPTS,
+#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps =  [
+        ":algorithm",
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+    ],
+)
