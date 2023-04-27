@@ -1,11 +1,13 @@
 cxx_library(
     name = "any_invocable",
-    exported_headers = ["any_invocable.h",
-                        "internal/any_invocable.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_headers = [
+        "any_invocable.h",
+        "internal/any_invocable.h",
+    ],
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:base_internal",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -16,12 +18,14 @@ cxx_library(
 
 cxx_library(
     name = "bind_front",
-    exported_headers = ["bind_front.h",
-                        "internal/front_binder.h"],
+    exported_headers = [
+        "bind_front.h",
+        "internal/front_binder.h",
+    ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:base_internal",
         "//absl/container:compressed_tuple",
         "//absl/meta:type_traits",
@@ -31,12 +35,14 @@ cxx_library(
 
 cxx_library(
     name = "function_ref",
-    exported_headers = ["function_ref.h",
-                        "internal/function_ref.h"],
+    exported_headers = [
+        "function_ref.h",
+        "internal/function_ref.h",
+    ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":any_invocable",
         "//absl/base:base_internal",
         "//absl/base:core_headers",

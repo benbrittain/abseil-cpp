@@ -1,8 +1,30 @@
+# Copyright 2021 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
+
+
 cxx_library(
     name = "cleanup_internal",
     exported_headers = ["internal/cleanup.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:base_internal",
         "//absl/base:core_headers",
@@ -15,12 +37,26 @@ cxx_library(
     exported_headers = [
         "cleanup.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-visibility = ["PUBLIC"],
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         ":cleanup_internal",
         "//absl/base:config",
         "//absl/base:core_headers",
+    ],
+)
+
+cxx_test(
+    name = "cleanup_test",
+    srcs = [
+        "cleanup_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cleanup",
+        "//absl/base:config",
+        "//absl/utility:utility",
+        "googletest//:gtest_main",
     ],
 )

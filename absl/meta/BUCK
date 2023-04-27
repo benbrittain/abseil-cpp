@@ -14,8 +14,8 @@ cxx_library(
     name = "type_traits",
     exported_headers = ["type_traits.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     deps = [
         "//absl/base:config",
     ],

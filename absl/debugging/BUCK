@@ -3,8 +3,8 @@ cxx_library(
     srcs = [
         "stacktrace.cc",
     ],
-    exported_headers = ["stacktrace.h",
-
+    exported_headers = [
+        "stacktrace.h",
         "internal/stacktrace_aarch64-inl.inc",
         "internal/stacktrace_arm-inl.inc",
         "internal/stacktrace_config.h",
@@ -15,12 +15,11 @@ cxx_library(
         "internal/stacktrace_unimplemented-inl.inc",
         "internal/stacktrace_win32-inl.inc",
         "internal/stacktrace_x86-inl.inc",
-
-                        ],
+    ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":debugging_internal",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -43,17 +42,17 @@ cxx_library(
         "internal/symbolize.h",
         "symbolize.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS + select({
-#        "//absl:msvc_compiler": ["-DEFAULTLIB:dbghelp.lib"],
-#        "//absl:clang-cl_compiler": ["-DEFAULTLIB:dbghelp.lib"],
-#        "//absl:mingw_compiler": [
-#            "-DEFAULTLIB:dbghelp.lib",
-#            "-ldbghelp",
-#        ],
-#        "//conditions:default": [],
-#    }),
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS + select({
+    #        "//absl:msvc_compiler": ["-DEFAULTLIB:dbghelp.lib"],
+    #        "//absl:clang-cl_compiler": ["-DEFAULTLIB:dbghelp.lib"],
+    #        "//absl:mingw_compiler": [
+    #            "-DEFAULTLIB:dbghelp.lib",
+    #            "-ldbghelp",
+    #        ],
+    #        "//conditions:default": [],
+    #    }),
+    exported_deps = [
         ":debugging_internal",
         ":demangle_internal",
         "//absl/base:base",
@@ -74,10 +73,10 @@ cxx_library(
     exported_headers = [
         "internal/examine_stack.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["//absl/log/internal/..."],
-    exported_deps =  [
+    exported_deps = [
         ":stacktrace",
         ":symbolize",
         "//absl/base:config",
@@ -91,9 +90,9 @@ cxx_library(
     srcs = ["failure_signal_handler.cc"],
     exported_headers = ["failure_signal_handler.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":examine_stack",
         ":stacktrace",
         "//absl/base:base",
@@ -102,7 +101,6 @@ cxx_library(
         "//absl/base:raw_logging_internal",
     ],
 )
-
 
 cxx_library(
     name = "debugging_internal",
@@ -117,10 +115,10 @@ cxx_library(
         "internal/vdso_support.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    visibility = ["//visibility:private"],
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    visibility = ["//visibility:private"],
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
         "//absl/base:dynamic_annotations",
@@ -134,9 +132,9 @@ cxx_library(
     srcs = ["internal/demangle.cc"],
     exported_headers = ["internal/demangle.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:base",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -148,9 +146,9 @@ cxx_library(
     srcs = ["leak_check.cc"],
     exported_headers = ["leak_check.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
     ],

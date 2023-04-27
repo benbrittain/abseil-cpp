@@ -1,16 +1,60 @@
+#
+# Copyright 2017 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
+
+
 cxx_library(
     name = "compressed_tuple",
     exported_headers = ["internal/compressed_tuple.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         "//absl/utility:utility",
+    ],
+)
+
+cxx_test(
+    name = "compressed_tuple_test",
+    srcs = ["internal/compressed_tuple_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":compressed_tuple",
+        ":test_instance_tracker",
+        "//absl/memory:memory",
+        "//absl/types:any",
+        "//absl/types:optional",
+        "//absl/utility:utility",
+        "googletest//:gtest_main",
     ],
 )
 
 cxx_library(
     name = "fixed_array",
     exported_headers = ["fixed_array.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         ":compressed_tuple",
         "//absl/algorithm:algorithm",
@@ -22,10 +66,52 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "fixed_array_test",
+    srcs = ["fixed_array_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":counting_allocator",
+        ":fixed_array",
+        "//absl/base:config",
+        "//absl/base:exception_testing",
+        "//absl/hash:hash_testing",
+        "//absl/memory:memory",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "fixed_array_exception_safety_test",
+    srcs = ["fixed_array_exception_safety_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":fixed_array",
+        "//absl/base:config",
+        "//absl/base:exception_safety_testing",
+        "googletest//:gtest_main",
+    ],
+)
+
+# cxx_binary(
+#     name = "fixed_array_benchmark",
+#     srcs = ["fixed_array_benchmark.cc"],
+#     compiler_flags = ABSL_TEST_COPTS + ["$(STACK_FRAME_UNLIMITED)"],
+#     linker_flags = ABSL_DEFAULT_LINKOPTS,
+#     tags = ["benchmark"],
+#     exported_deps = [
+#         ":fixed_array",
+#         "@com_github_google_benchmark//:benchmark_main",
+#     ],
+# )
+
 cxx_library(
     name = "inlined_vector_internal",
     exported_headers = ["internal/inlined_vector.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":compressed_tuple",
         "//absl/base:core_headers",
@@ -38,7 +124,9 @@ cxx_library(
 cxx_library(
     name = "inlined_vector",
     exported_headers = ["inlined_vector.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         ":inlined_vector_internal",
         "//absl/algorithm:algorithm",
@@ -50,9 +138,89 @@ cxx_library(
 )
 
 cxx_library(
+    name = "counting_allocator",
+    exported_headers = ["internal/counting_allocator.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    visibility = [ "PUBLIC" ],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = ["//absl/base:config"],
+)
+
+cxx_test(
+    name = "inlined_vector_test",
+    srcs = ["inlined_vector_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":counting_allocator",
+        ":inlined_vector",
+        ":test_instance_tracker",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:exception_testing",
+        "//absl/base:raw_logging_internal",
+        "//absl/hash:hash_testing",
+        "//absl/memory:memory",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_binary(
+#    name = "inlined_vector_benchmark",
+#    srcs = ["inlined_vector_benchmark.cc"],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    deps = [
+#        ":inlined_vector",
+#        "//absl/base:core_headers",
+#        "//absl/base:raw_logging_internal",
+#        "//absl/strings:strings",
+#        "@com_github_google_benchmark//:benchmark_main",
+#    ],
+#)
+
+cxx_test(
+    name = "inlined_vector_exception_safety_test",
+    srcs = ["inlined_vector_exception_safety_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":inlined_vector",
+        "//absl/base:config",
+        "//absl/base:exception_safety_testing",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "test_instance_tracker",
+    srcs = ["internal/test_instance_tracker.cc"],
+    exported_headers = ["internal/test_instance_tracker.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [
+        "//absl/...",
+    ],
+    exported_deps = ["//absl/types:compare"],
+)
+
+cxx_test(
+    name = "test_instance_tracker_test",
+    srcs = ["internal/test_instance_tracker_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":test_instance_tracker",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
     name = "flat_hash_map",
     exported_headers = ["flat_hash_map.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         ":container_memory",
         ":hash_function_defaults",
@@ -60,12 +228,32 @@ cxx_library(
         "//absl/algorithm:container",
         "//absl/base:core_headers",
         "//absl/memory:memory",
+    ],
+)
+
+cxx_test(
+    name = "flat_hash_map_test",
+    srcs = ["flat_hash_map_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":flat_hash_map",
+        ":hash_generator_testing",
+        ":unordered_map_constructor_test",
+        ":unordered_map_lookup_test",
+        ":unordered_map_members_test",
+        ":unordered_map_modifiers_test",
+        "//absl/base:raw_logging_internal",
+        "//absl/types:any",
+        "googletest//:gtest_main",
     ],
 )
 
 cxx_library(
     name = "flat_hash_set",
     exported_headers = ["flat_hash_set.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
     exported_deps = [
         ":container_memory",
@@ -77,9 +265,30 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "flat_hash_set_test",
+    srcs = ["flat_hash_set_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS + ["-DUNORDERED_SET_CXX17"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":flat_hash_set",
+        ":hash_generator_testing",
+        ":unordered_set_constructor_test",
+        ":unordered_set_lookup_test",
+        ":unordered_set_members_test",
+        ":unordered_set_modifiers_test",
+        "//absl/base:raw_logging_internal",
+        "//absl/memory:memory",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "node_hash_map",
     exported_headers = ["node_hash_map.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
     exported_deps = [
         ":container_memory",
@@ -92,9 +301,28 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "node_hash_map_test",
+    srcs = ["node_hash_map_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash_generator_testing",
+        ":node_hash_map",
+        ":tracked",
+        ":unordered_map_constructor_test",
+        ":unordered_map_lookup_test",
+        ":unordered_map_members_test",
+        ":unordered_map_modifiers_test",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "node_hash_set",
     exported_headers = ["node_hash_set.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
     exported_deps = [
         ":hash_function_defaults",
@@ -106,11 +334,27 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "node_hash_set_test",
+    srcs = ["node_hash_set_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS + ["-DUNORDERED_SET_CXX17"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":node_hash_set",
+        ":unordered_set_constructor_test",
+        ":unordered_set_lookup_test",
+        ":unordered_set_members_test",
+        ":unordered_set_modifiers_test",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "container_memory",
     exported_headers = ["internal/container_memory.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         "//absl/base:config",
         "//absl/memory:memory",
@@ -119,9 +363,25 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "container_memory_test",
+    srcs = ["internal/container_memory_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":container_memory",
+        ":test_instance_tracker",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "hash_function_defaults",
     exported_headers = ["internal/hash_function_defaults.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         "//absl/base:config",
         "//absl/hash:hash",
@@ -130,26 +390,104 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "hash_function_defaults_test",
+    srcs = ["internal/hash_function_defaults_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash_function_defaults",
+        "//absl/hash:hash",
+        "//absl/random:random",
+        "//absl/strings:strings",
+        "//absl/strings:cord",
+        "//absl/strings:cord_test_helpers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "hash_generator_testing",
+    srcs = ["internal/hash_generator_testing.cc"],
+    exported_headers = ["internal/hash_generator_testing.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_policy_testing",
+        "//absl/memory:memory",
+        "//absl/meta:type_traits",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_library(
+    name = "hash_policy_testing",
+    exported_headers = ["internal/hash_policy_testing.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/hash:hash",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_test(
+    name = "hash_policy_testing_test",
+    srcs = ["internal/hash_policy_testing_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash_policy_testing",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "hash_policy_traits",
     exported_headers = ["internal/hash_policy_traits.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":common_policy_traits",
         "//absl/meta:type_traits",
     ],
 )
 
+cxx_test(
+    name = "hash_policy_traits_test",
+    srcs = ["internal/hash_policy_traits_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash_policy_traits",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "common_policy_traits",
     exported_headers = ["internal/common_policy_traits.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = ["//absl/meta:type_traits"],
+)
+
+cxx_test(
+    name = "common_policy_traits_test",
+    srcs = ["internal/common_policy_traits_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":common_policy_traits",
+        "googletest//:gtest_main",
+    ],
 )
 
 cxx_library(
     name = "hashtable_debug",
     exported_headers = ["internal/hashtable_debug.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":hashtable_debug_hooks",
     ],
@@ -158,7 +496,8 @@ cxx_library(
 cxx_library(
     name = "hashtable_debug_hooks",
     exported_headers = ["internal/hashtable_debug_hooks.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:config",
     ],
@@ -171,7 +510,8 @@ cxx_library(
         "internal/hashtablez_sampler_force_weak_definition.cc",
     ],
     exported_headers = ["internal/hashtablez_sampler.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:base",
         "//absl/base:config",
@@ -187,19 +527,47 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "hashtablez_sampler_test",
+    srcs = ["internal/hashtablez_sampler_test.cc"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hashtablez_sampler",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/profiling:sample_recorder",
+        "//absl/synchronization:synchronization",
+        "//absl/synchronization:thread_pool",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "node_slot_policy",
     exported_headers = ["internal/node_slot_policy.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = ["//absl/base:config"],
 )
 
+cxx_test(
+    name = "node_slot_policy_test",
+    srcs = ["internal/node_slot_policy_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash_policy_traits",
+        ":node_slot_policy",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "raw_hash_map",
     exported_headers = ["internal/raw_hash_map.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":container_memory",
         ":raw_hash_set",
@@ -210,7 +578,8 @@ cxx_library(
 cxx_library(
     name = "common",
     exported_headers = ["internal/common.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/meta:type_traits",
         "//absl/types:optional",
@@ -221,7 +590,8 @@ cxx_library(
     name = "raw_hash_set",
     srcs = ["internal/raw_hash_set.cc"],
     exported_headers = ["internal/raw_hash_set.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":common",
         ":compressed_tuple",
@@ -243,10 +613,82 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "raw_hash_set_test",
+    srcs = ["internal/raw_hash_set_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":container_memory",
+        ":flat_hash_map",
+        ":flat_hash_set",
+        ":hash_function_defaults",
+        ":hash_policy_testing",
+        ":hashtable_debug",
+        ":raw_hash_set",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:prefetch",
+        "//absl/base:raw_logging_internal",
+        "//absl/log:log",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_binary(
+#    name = "raw_hash_set_benchmark",
+#    srcs = ["internal/raw_hash_set_benchmark.cc"],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    exported_deps = [
+#        ":hash_function_defaults",
+#        ":raw_hash_set",
+#        "//absl/base:raw_logging_internal",
+#        "//absl/strings:str_format",
+#        "@com_github_google_benchmark//:benchmark_main",
+#    ],
+#)
+
+#cxx_binary(
+#    name = "raw_hash_set_probe_benchmark",
+#    srcs = ["internal/raw_hash_set_probe_benchmark.cc"],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = select({
+#        "//conditions:default": [],
+#    }) + ABSL_DEFAULT_LINKOPTS,
+#    tags = ["benchmark"],
+#    exported_deps = [
+#        ":flat_hash_map",
+#        ":hash_function_defaults",
+#        ":hashtable_debug",
+#        ":raw_hash_set",
+#        "//absl/random:random",
+#        "//absl/random:distributions",
+#        "//absl/strings:strings",
+#        "//absl/strings:str_format",
+#    ],
+#)
+
+cxx_test(
+    name = "raw_hash_set_allocator_test",
+    srcs = ["internal/raw_hash_set_allocator_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":raw_hash_set",
+        ":tracked",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
 cxx_library(
     name = "layout",
     exported_headers = ["internal/layout.h"],
-    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [ "PUBLIC" ],
     exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -257,6 +699,181 @@ cxx_library(
     ],
 )
 
+cxx_test(
+    name = "layout_test",
+    srcs = ["internal/layout_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":layout",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/types:span",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_binary(
+#    name = "layout_benchmark",
+#    srcs = ["internal/layout_benchmark.cc"],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    tags = ["benchmark"],
+#    exported_deps = [
+#        ":layout",
+#        "//absl/base:core_headers",
+#        "//absl/base:raw_logging_internal",
+#        "@com_github_google_benchmark//:benchmark_main",
+#    ],
+#)
+
+cxx_library(
+    name = "tracked",
+    exported_headers = ["internal/tracked.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/base:config",
+    ],
+)
+
+cxx_library(
+    name = "unordered_map_constructor_test",
+    exported_headers = ["internal/unordered_map_constructor_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_map_lookup_test",
+    exported_headers = ["internal/unordered_map_lookup_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_map_modifiers_test",
+    exported_headers = ["internal/unordered_map_modifiers_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_set_constructor_test",
+    exported_headers = ["internal/unordered_set_constructor_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "//absl/meta:type_traits",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_set_members_test",
+    exported_headers = ["internal/unordered_set_members_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/meta:type_traits",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_map_members_test",
+    exported_headers = ["internal/unordered_map_members_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        "//absl/meta:type_traits",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_set_lookup_test",
+    exported_headers = ["internal/unordered_set_lookup_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
+    name = "unordered_set_modifiers_test",
+    exported_headers = ["internal/unordered_set_modifiers_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash_generator_testing",
+        ":hash_policy_testing",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "unordered_set_test",
+    srcs = ["internal/unordered_set_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":unordered_set_constructor_test",
+        ":unordered_set_lookup_test",
+        ":unordered_set_members_test",
+        ":unordered_set_modifiers_test",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "unordered_map_test",
+    srcs = ["internal/unordered_map_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":unordered_map_constructor_test",
+        ":unordered_map_lookup_test",
+        ":unordered_map_members_test",
+        ":unordered_map_modifiers_test",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "sample_element_size_test",
+    srcs = ["sample_element_size_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":flat_hash_map",
+        ":flat_hash_set",
+        ":node_hash_map",
+        ":node_hash_set",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "btree",
@@ -268,6 +885,8 @@ cxx_library(
         "btree_map.h",
         "btree_set.h",
     ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
     exported_deps = [
         ":common",
@@ -286,3 +905,70 @@ cxx_library(
         "//absl/utility:utility",
     ],
 )
+
+cxx_library(
+    name = "btree_test_common",
+    exported_headers = ["btree_test.h"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":btree",
+        ":flat_hash_set",
+        "//absl/strings:strings",
+        "//absl/strings:cord",
+        "//absl/time:time",
+    ],
+)
+
+cxx_test(
+    name = "btree_test",
+    srcs = [
+        "btree_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":btree",
+        ":btree_test_common",
+        ":counting_allocator",
+        ":test_instance_tracker",
+        "//absl/algorithm:container",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/flags:flag",
+        "//absl/hash:hash_testing",
+        "//absl/memory:memory",
+        "//absl/random:random",
+        "//absl/strings:strings",
+        "//absl/types:compare",
+        "//absl/types:optional",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_binary(
+#    name = "btree_benchmark",
+#    srcs = [
+#        "btree_benchmark.cc",
+#    ],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    tags = ["benchmark"],
+#    exported_deps = [
+#        ":btree",
+#        ":btree_test_common",
+#        ":flat_hash_map",
+#        ":flat_hash_set",
+#        ":hashtable_debug",
+#        "//absl/algorithm:container",
+#        "//absl/base:raw_logging_internal",
+#        "//absl/hash:hash",
+#        "//absl/log:log",
+#        "//absl/memory:memory",
+#        "//absl/random:random",
+#        "//absl/strings:cord",
+#        "//absl/strings:str_format",
+#        "//absl/time:time",
+#        "@com_github_google_benchmark//:benchmark_main",
+#    ],
+#)

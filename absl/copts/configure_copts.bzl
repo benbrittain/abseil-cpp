@@ -21,7 +21,7 @@ load(
     "ABSL_RANDOM_HWAES_X64_FLAGS",
 )
 
-ABSL_DEFAULT_COPTS  = ABSL_LLVM_FLAGS
+ABSL_DEFAULT_COPTS = ABSL_LLVM_FLAGS
 #ABSL_DEFAULT_COPTS = select({
 #    "//absl:msvc_compiler": ABSL_MSVC_FLAGS,
 #    "//absl:clang-cl_compiler": ABSL_CLANG_CL_FLAGS,

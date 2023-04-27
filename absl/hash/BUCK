@@ -1,15 +1,38 @@
+#
+# Copyright 2019 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
 cxx_library(
     name = "hash",
     srcs = [
         "internal/hash.cc",
     ],
-    exported_headers = ["hash.h",
-                    "internal/hash.h",
-                    ],
+    headers = [
+        "internal/hash.h",
+    ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    exported_headers = ["hash.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":city",
         ":low_level_hash",
         "//absl/base:config",
@@ -28,18 +51,95 @@ cxx_library(
 )
 
 cxx_library(
+    name = "hash_testing",
+    exported_headers = ["hash_testing.h"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/..."],
+    exported_deps = [
+        ":spy_hash_state",
+        "//absl/meta:type_traits",
+        "//absl/strings:strings",
+        "//absl/types:variant",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "hash_test",
+    srcs = ["hash_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":hash",
+        ":hash_testing",
+        ":spy_hash_state",
+        "//absl/base:core_headers",
+        "//absl/container:btree",
+        "//absl/container:flat_hash_map",
+        "//absl/container:flat_hash_set",
+        "//absl/container:node_hash_map",
+        "//absl/container:node_hash_set",
+        "//absl/meta:type_traits",
+        "//absl/numeric:int128",
+        "//absl/strings:cord_test_helpers",
+        "googletest//:gtest_main",
+    ],
+)
+
+# TODO
+# cxx_binary(
+#     name = "hash_benchmark",
+#     srcs = ["hash_benchmark.cc"],
+#     compiler_flags = ABSL_TEST_COPTS,
+#     linker_flags = ABSL_DEFAULT_LINKOPTS,
+#     tags = ["benchmark"],
+#     deps = [
+#         ":hash",
+#         "//absl/base:core_headers",
+#         "//absl/container:flat_hash_set",
+#         "//absl/random:random",
+#         "//absl/strings:strings",
+#         "//absl/strings:cord",
+#         "//absl/strings:cord_test_helpers",
+#         "@com_github_google_benchmark//:benchmark_main",
+#     ],
+# )
+
+cxx_library(
+    name = "spy_hash_state",
+    exported_headers = ["internal/spy_hash_state.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":hash",
+        "//absl/strings:strings",
+        "//absl/strings:str_format",
+    ],
+)
+
+cxx_library(
     name = "city",
     srcs = ["internal/city.cc"],
     exported_headers = [
         "internal/city.h",
     ],
-    visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
         "//absl/base:endian",
+    ],
+)
+
+cxx_test(
+    name = "city_test",
+    srcs = ["internal/city_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":city",
+        "googletest//:gtest_main",
     ],
 )
 
@@ -47,11 +147,23 @@ cxx_library(
     name = "low_level_hash",
     srcs = ["internal/low_level_hash.cc"],
     exported_headers = ["internal/low_level_hash.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:endian",
         "//absl/numeric:int128",
+    ],
+)
+
+cxx_test(
+    name = "low_level_hash_test",
+    srcs = ["internal/low_level_hash_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":low_level_hash",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
     ],
 )

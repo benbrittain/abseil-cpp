@@ -1,6 +1,7 @@
 [repositories]
 abseil = .
 prelude = prelude
+googletest = third_party/googletest
 toolchains = toolchains
 none = none
 

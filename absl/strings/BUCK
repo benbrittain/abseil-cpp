@@ -1,10 +1,23 @@
-# load(
-#     "//absl:copts/configure_copts.bzl",
-#     "ABSL_DEFAULT_COPTS",
-#     "ABSL_DEFAULT_LINKOPTS",
-#     "ABSL_TEST_COPTS",
-# )
+#
+# Copyright 2017 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
 
 cxx_library(
     name = "strings",
@@ -25,15 +38,16 @@ cxx_library(
         "string_view.cc",
         "substitute.cc",
     ],
-    exported_headers = [
+    headers = [
+        "internal/stringify_sink.h",
         "internal/charconv_bigint.h",
         "internal/charconv_parse.h",
         "internal/memutil.h",
         "internal/stl_type_traits.h",
         "internal/str_join_internal.h",
         "internal/str_split_internal.h",
-        "internal/stringify_sink.h",
-
+    ],
+    exported_headers = [
         "ascii.h",
         "charconv.h",
         "escaping.h",
@@ -50,10 +64,10 @@ cxx_library(
         "strip.h",
         "substitute.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    visibility = [ "PUBLIC"],
-    exported_deps =  [
+    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":internal",
         "//absl/base:base",
         "//absl/base:config",
@@ -82,10 +96,10 @@ cxx_library(
         "internal/resize_uninitialized.h",
         "internal/utf8.h",
     ],
-    visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    visibility = ["//absl/..."],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
         "//absl/base:endian",
@@ -94,178 +108,155 @@ cxx_library(
     ],
 )
 
-#cc_test(
-#    name = "match_test",
-#    size = "small",
-#    srcs = ["match_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "escaping_test",
-#    size = "small",
-#    srcs = [
-#        "escaping_test.cc",
-#        "internal/escaping_test_common.h",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "//absl/container:fixed_array",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+cxx_test(
+    name = "match_test",
+    srcs = ["match_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "escaping_test",
+    srcs = [
+        "escaping_test.cc",
+        "internal/escaping_test_common.h",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":strings",
+        "//absl/base:core_headers",
+        "//absl/container:fixed_array",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "escaping_benchmark",
 #    srcs = [
 #        "escaping_benchmark.cc",
 #        "internal/escaping_test_common.h",
 #    ],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "//absl/base:raw_logging_internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
+
+cxx_test(
+    name = "ascii_test",
+    srcs = ["ascii_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
 #
-#cc_test(
-#    name = "ascii_test",
-#    size = "small",
-#    srcs = ["ascii_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+#cxx_test(
 #    name = "ascii_benchmark",
 #    srcs = ["ascii_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "damerau_levenshtein_distance_test",
-#    size = "small",
-#    srcs = [
-#        "internal/damerau_levenshtein_distance_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    exported_deps =  [
-#        "//absl/strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+
+cxx_test(
+    name = "damerau_levenshtein_distance_test",
+    srcs = [
+        "internal/damerau_levenshtein_distance_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "memutil_benchmark",
 #    srcs = [
 #        "internal/memutil.h",
 #        "internal/memutil_benchmark.cc",
 #    ],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "//absl/base:core_headers",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "memutil_test",
-#    size = "small",
-#    srcs = [
-#        "internal/memutil.h",
-#        "internal/memutil_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "utf8_test",
-#    size = "small",
-#    srcs = [
-#        "internal/utf8_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":internal",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "string_constant_test",
-#    size = "small",
-#    srcs = ["internal/string_constant_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/meta:type_traits",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+
+cxx_test(
+    name = "memutil_test",
+    srcs = [
+        "internal/memutil.h",
+        "internal/memutil_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "utf8_test",
+    srcs = [
+        "internal/utf8_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":internal",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "string_constant_test",
+    srcs = ["internal/string_constant_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/meta:type_traits",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "string_view_benchmark",
 #    srcs = ["string_view_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "//absl/base:core_headers",
 #        "//absl/base:raw_logging_internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "string_view_test",
-#    size = "small",
-#    srcs = ["string_view_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "//absl/base:dynamic_annotations",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
+
+cxx_test(
+    name = "string_view_test",
+    srcs = ["string_view_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "cord_internal",
@@ -290,12 +281,11 @@ cxx_library(
         "internal/cord_rep_ring.h",
         "internal/cord_rep_ring_reader.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    visibility = [
-#        "//visibility:private",
-#    ],
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = [
+    ],
+    exported_deps = [
         ":strings",
         "//absl/base:base_internal",
         "//absl/base:config",
@@ -314,109 +304,98 @@ cxx_library(
     ],
 )
 
-#cc_test(
-#    name = "cord_data_edge_test",
-#    size = "small",
-#    srcs = ["internal/cord_data_edge_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        ":strings",
-#        "//absl/base:config",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_rep_btree_test",
-#    size = "medium",
-#    timeout = "long",
-#    srcs = ["internal/cord_rep_btree_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/cleanup",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_rep_btree_navigator_test",
-#    size = "medium",
-#    srcs = ["internal/cord_rep_btree_navigator_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_rep_btree_reader_test",
-#    size = "medium",
-#    srcs = ["internal/cord_rep_btree_reader_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_rep_crc_test",
-#    size = "small",
-#    srcs = ["internal/cord_rep_crc_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        "//absl/base:config",
-#        "//absl/crc:crc_cord_state",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
+cxx_test(
+    name = "cord_data_edge_test",
+    srcs = ["internal/cord_data_edge_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":cord_rep_test_util",
+        ":strings",
+        "//absl/base:config",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_rep_btree_test",
+    srcs = ["internal/cord_rep_btree_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":cord_rep_test_util",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+        "//absl/cleanup:cleanup",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_rep_btree_navigator_test",
+    srcs = ["internal/cord_rep_btree_navigator_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":cord_rep_test_util",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_rep_btree_reader_test",
+    srcs = ["internal/cord_rep_btree_reader_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":cord_internal",
+        ":cord_rep_test_util",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_rep_crc_test",
+    srcs = ["internal/cord_rep_crc_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":cord_rep_test_util",
+        "//absl/base:config",
+        "//absl/crc:crc_cord_state",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "cordz_update_tracker",
     exported_headers = ["internal/cordz_update_tracker.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  ["//absl/base:config"],
+    exported_deps = ["//absl/base:config"],
 )
 
-#cc_test(
-#    name = "cordz_update_tracker_test",
-#    srcs = ["internal/cordz_update_tracker_test.cc"],
-#    exported_deps =  [
-#        ":cordz_update_tracker",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "//absl/synchronization",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
+cxx_test(
+    name = "cordz_update_tracker_test",
+    srcs = ["internal/cordz_update_tracker_test.cc"],
+    deps = [
+        ":cordz_update_tracker",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/synchronization:synchronization",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "cord",
@@ -426,14 +405,14 @@ cxx_library(
         "cord_buffer.cc",
     ],
     exported_headers = [
-        "cord_analysis.h",
         "cord.h",
         "cord_buffer.h",
+        "cord_analysis.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":cord_internal",
         ":cordz_functions",
         ":cordz_info",
@@ -462,12 +441,12 @@ cxx_library(
     name = "cordz_handle",
     srcs = ["internal/cordz_handle.cc"],
     exported_headers = ["internal/cordz_handle.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:base",
         "//absl/base:config",
         "//absl/base:raw_logging_internal",
@@ -479,12 +458,12 @@ cxx_library(
     name = "cordz_info",
     srcs = ["internal/cordz_info.cc"],
     exported_headers = ["internal/cordz_info.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         ":cord_internal",
         ":cordz_functions",
         ":cordz_handle",
@@ -505,12 +484,12 @@ cxx_library(
 cxx_library(
     name = "cordz_update_scope",
     exported_headers = ["internal/cordz_update_scope.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         ":cord_internal",
         ":cordz_info",
         ":cordz_update_tracker",
@@ -519,31 +498,31 @@ cxx_library(
     ],
 )
 
-#cc_test(
-#    name = "cordz_update_scope_test",
-#    srcs = ["internal/cordz_update_scope_test.cc"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cordz_info",
-#        ":cordz_test_helpers",
-#        ":cordz_update_scope",
-#        ":cordz_update_tracker",
-#        "//absl/base:config",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
+cxx_test(
+    name = "cordz_update_scope_test",
+    srcs = ["internal/cordz_update_scope_test.cc"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    deps = [
+        ":cord_internal",
+        ":cordz_info",
+        ":cordz_test_helpers",
+        ":cordz_update_scope",
+        ":cordz_update_tracker",
+        "//absl/base:config",
+        "googletest//:gtest_main",
+    ],
+)
 
 cxx_library(
     name = "cordz_sample_token",
     srcs = ["internal/cordz_sample_token.cc"],
     exported_headers = ["internal/cordz_sample_token.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         ":cordz_handle",
         ":cordz_info",
         "//absl/base:config",
@@ -554,12 +533,12 @@ cxx_library(
     name = "cordz_functions",
     srcs = ["internal/cordz_functions.cc"],
     exported_headers = ["internal/cordz_functions.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
         "//absl/base:raw_logging_internal",
@@ -570,559 +549,507 @@ cxx_library(
 cxx_library(
     name = "cordz_statistics",
     exported_headers = ["internal/cordz_statistics.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
-    exported_deps =  [
+    exported_deps = [
         ":cordz_update_tracker",
         "//absl/base:config",
     ],
 )
 
-#cc_test(
-#    name = "cordz_functions_test",
-#    srcs = [
-#        "internal/cordz_functions_test.cc",
-#    ],
-#    exported_deps =  [
-#        ":cordz_functions",
-#        ":cordz_test_helpers",
-#        "//absl/base:config",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cordz_handle_test",
-#    srcs = [
-#        "internal/cordz_handle_test.cc",
-#    ],
-#    exported_deps =  [
-#        ":cordz_handle",
-#        "//absl/base:config",
-#        "//absl/memory",
-#        "//absl/random",
-#        "//absl/random:distributions",
-#        "//absl/synchronization",
-#        "//absl/synchronization:thread_pool",
-#        "//absl/time",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cordz_info_test",
-#    srcs = [
-#        "internal/cordz_info_test.cc",
-#    ],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cordz_handle",
-#        ":cordz_info",
-#        ":cordz_statistics",
-#        ":cordz_test_helpers",
-#        ":cordz_update_tracker",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/debugging:stacktrace",
-#        "//absl/debugging:symbolize",
-#        "//absl/types:span",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cordz_info_statistics_test",
-#    srcs = [
-#        "internal/cordz_info_statistics_test.cc",
-#    ],
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_internal",
-#        ":cordz_info",
-#        ":cordz_sample_token",
-#        ":cordz_statistics",
-#        ":cordz_update_scope",
-#        ":cordz_update_tracker",
-#        "//absl/base:config",
-#        "//absl/crc:crc_cord_state",
-#        "//absl/synchronization",
-#        "//absl/synchronization:thread_pool",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cordz_sample_token_test",
-#    srcs = [
-#        "internal/cordz_sample_token_test.cc",
-#    ],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":cordz_handle",
-#        ":cordz_info",
-#        ":cordz_sample_token",
-#        ":cordz_test_helpers",
-#        "//absl/base:config",
-#        "//absl/memory",
-#        "//absl/random",
-#        "//absl/synchronization",
-#        "//absl/synchronization:thread_pool",
-#        "//absl/time",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cxx_library(
-#    name = "cord_test_helpers",
-#    testonly = 1,
-#    exported_headers = [
-#        "cord_test_helpers.h",
-#    ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_internal",
-#        ":strings",
-#        "//absl/base:config",
-#    ],
-#)
-#
-#cxx_library(
-#    name = "cord_rep_test_util",
-#    testonly = 1,
-#    exported_headers = ["internal/cord_rep_test_util.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#    ],
-#)
-#
-#cxx_library(
-#    name = "cordz_test_helpers",
-#    testonly = 1,
-#    exported_headers = ["cordz_test_helpers.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_internal",
-#        ":cordz_info",
-#        ":cordz_sample_token",
-#        ":cordz_statistics",
-#        ":cordz_update_tracker",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_buffer_test",
-#    size = "small",
-#    srcs = ["cord_buffer_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_internal",
-#        ":cord_rep_test_util",
-#        "//absl/base:config",
-#        "//absl/types:span",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_test",
-#    size = "medium",
-#    srcs = ["cord_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_test_helpers",
-#        ":cordz_functions",
-#        ":cordz_test_helpers",
-#        ":str_format",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "//absl/base:endian",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/container:fixed_array",
-#        "//absl/hash",
-#        "//absl/log",
-#        "//absl/random",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cordz_test",
-#    size = "medium",
-#    srcs = ["cordz_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = [
-#        "benchmark",
-#        "no_test_android_arm",
-#        "no_test_android_arm64",
-#        "no_test_android_x86",
-#        "no_test_ios_x86_64",
-#        "no_test_lexan",
-#        "no_test_loonix",
-#    ],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":cord_test_helpers",
-#        ":cordz_functions",
-#        ":cordz_info",
-#        ":cordz_sample_token",
-#        ":cordz_statistics",
-#        ":cordz_test_helpers",
-#        ":cordz_update_tracker",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "//absl/base:raw_logging_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_ring_test",
-#    size = "medium",
-#    srcs = ["cord_ring_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:core_headers",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/debugging:leak_check",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "cord_ring_reader_test",
-#    size = "medium",
-#    srcs = ["cord_ring_reader_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord_internal",
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "//absl/debugging:leak_check",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "substitute_test",
-#    size = "small",
-#    srcs = ["substitute_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+cxx_test(
+    name = "cordz_functions_test",
+    srcs = [
+        "internal/cordz_functions_test.cc",
+    ],
+    deps = [
+        ":cordz_functions",
+        ":cordz_test_helpers",
+        "//absl/base:config",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cordz_handle_test",
+    srcs = [
+        "internal/cordz_handle_test.cc",
+    ],
+    deps = [
+        ":cordz_handle",
+        "//absl/base:config",
+        "//absl/memory:memory",
+        "//absl/random:random",
+        "//absl/random:distributions",
+        "//absl/synchronization:synchronization",
+        "//absl/synchronization:thread_pool",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cordz_info_test",
+    srcs = [
+        "internal/cordz_info_test.cc",
+    ],
+    deps = [
+        ":cord_internal",
+        ":cordz_handle",
+        ":cordz_info",
+        ":cordz_statistics",
+        ":cordz_test_helpers",
+        ":cordz_update_tracker",
+        ":strings",
+        "//absl/base:config",
+        "//absl/debugging:stacktrace",
+        "//absl/debugging:symbolize",
+        "//absl/types:span",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cordz_info_statistics_test",
+    srcs = [
+        "internal/cordz_info_statistics_test.cc",
+    ],
+    deps = [
+        ":cord",
+        ":cord_internal",
+        ":cordz_info",
+        ":cordz_sample_token",
+        ":cordz_statistics",
+        ":cordz_update_scope",
+        ":cordz_update_tracker",
+        "//absl/base:config",
+        "//absl/crc:crc_cord_state",
+        "//absl/synchronization:synchronization",
+        "//absl/synchronization:thread_pool",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cordz_sample_token_test",
+    srcs = [
+        "internal/cordz_sample_token_test.cc",
+    ],
+    deps = [
+        ":cord_internal",
+        ":cordz_handle",
+        ":cordz_info",
+        ":cordz_sample_token",
+        ":cordz_test_helpers",
+        "//absl/base:config",
+        "//absl/memory:memory",
+        "//absl/random:random",
+        "//absl/synchronization:synchronization",
+        "//absl/synchronization:thread_pool",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "cord_test_helpers",
+    exported_headers = [
+        "cord_test_helpers.h",
+    ],
+    visibility = ["PUBLIC"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":cord",
+        ":cord_internal",
+        ":strings",
+        "//absl/base:config",
+    ],
+)
+
+cxx_library(
+    name = "cord_rep_test_util",
+    exported_headers = ["internal/cord_rep_test_util.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":cord_internal",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "cordz_test_helpers",
+    exported_headers = ["cordz_test_helpers.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
+        ":cord",
+        ":cord_internal",
+        ":cordz_info",
+        ":cordz_sample_token",
+        ":cordz_statistics",
+        ":cordz_update_tracker",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "cord_buffer_test",
+    srcs = ["cord_buffer_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":cord_internal",
+        ":cord_rep_test_util",
+        "//absl/base:config",
+        "//absl/types:span",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_test",
+    srcs = ["cord_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":cord_test_helpers",
+        ":cordz_functions",
+        ":cordz_test_helpers",
+        ":str_format",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:endian",
+        "//absl/base:raw_logging_internal",
+        "//absl/container:fixed_array",
+        "//absl/hash:hash",
+        "//absl/log:log",
+        "//absl/random:random",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cordz_test",
+    srcs = ["cordz_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":cord_test_helpers",
+        ":cordz_functions",
+        ":cordz_info",
+        ":cordz_sample_token",
+        ":cordz_statistics",
+        ":cordz_test_helpers",
+        ":cordz_update_tracker",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_ring_test",
+    srcs = ["cord_ring_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/debugging:leak_check",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "cord_ring_reader_test",
+    srcs = ["cord_ring_reader_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord_internal",
+        ":strings",
+        "//absl/base:core_headers",
+        "//absl/debugging:leak_check",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "substitute_test",
+    srcs = ["substitute_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "str_replace_benchmark",
 #    srcs = ["str_replace_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "//absl/base:raw_logging_internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "str_replace_test",
-#    size = "small",
-#    srcs = ["str_replace_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_split_test",
-#    srcs = ["str_split_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "//absl/base:dynamic_annotations",
-#        "//absl/container:btree",
-#        "//absl/container:flat_hash_map",
-#        "//absl/container:node_hash_map",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+
+cxx_test(
+    name = "str_replace_test",
+    srcs = ["str_replace_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_split_test",
+    srcs = ["str_split_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/container:btree",
+        "//absl/container:flat_hash_map",
+        "//absl/container:node_hash_map",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "str_split_benchmark",
 #    srcs = ["str_split_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "//absl/base:raw_logging_internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "ostringstream_test",
-#    size = "small",
-#    srcs = ["internal/ostringstream_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+
+cxx_test(
+    name = "ostringstream_test",
+    srcs = ["internal/ostringstream_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_test(
 #    name = "ostringstream_benchmark",
 #    srcs = ["internal/ostringstream_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
 #
-#cc_test(
-#    name = "resize_uninitialized_test",
-#    size = "small",
-#    srcs = [
-#        "internal/resize_uninitialized.h",
-#        "internal/resize_uninitialized_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        "//absl/base:core_headers",
-#        "//absl/meta:type_traits",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
+cxx_test(
+    name = "resize_uninitialized_test",
+    srcs = [
+        "internal/resize_uninitialized_test.cc",
+    ],
+    headers = [
+        "internal/resize_uninitialized.h",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        "//absl/base:core_headers",
+        "//absl/meta:type_traits",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_join_test",
+    srcs = ["str_join_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:core_headers",
+        "//absl/memory:memory",
+        "googletest//:gtest_main",
+    ],
+)
 #
-#cc_test(
-#    name = "str_join_test",
-#    size = "small",
-#    srcs = ["str_join_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "//absl/memory",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+#cxx_test(
 #    name = "str_join_benchmark",
 #    srcs = ["str_join_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
+
+cxx_test(
+    name = "str_cat_test",
+    srcs = ["str_cat_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format",
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
 #
-#cc_test(
-#    name = "str_cat_test",
-#    size = "small",
-#    srcs = ["str_cat_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format",
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+#cxx_test(
 #    name = "str_cat_benchmark",
 #    srcs = ["str_cat_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":strings",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
+
+cxx_test(
+    name = "numbers_test",
+    srcs = [
+        "internal/numbers_test_common.h",
+        "numbers_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":internal",
+        ":pow10_helper",
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+        "//absl/random:random",
+        "//absl/random:distributions",
+        "googletest//:gtest_main",
+    ],
+)
 #
-#cc_test(
-#    name = "numbers_test",
-#    size = "medium",
-#    srcs = [
-#        "internal/numbers_test_common.h",
-#        "numbers_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":internal",
-#        ":pow10_helper",
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/random",
-#        "//absl/random:distributions",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+#cxx_test(
 #    name = "numbers_benchmark",
-#    srcs = ["numbers_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/random",
-#        "//absl/random:distributions",
+##    srcs = ["numbers_benchmark.cc"],
+##    compiler_flags = ABSL_TEST_COPTS,
+##    deps = [
+##        ":strings",
+##        "//absl/base:raw_logging_internal",
+##        "//absl/random:random",
+##        "//absl/random:distributions",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
+
+cxx_test(
+    name = "strip_test",
+    srcs = ["strip_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "char_map_test",
+    srcs = ["internal/char_map_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":internal",
+        "googletest//:gtest_main",
+    ],
+)
 #
-#cc_test(
-#    name = "strip_test",
-#    size = "small",
-#    srcs = ["strip_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "char_map_test",
-#    srcs = ["internal/char_map_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    exported_deps =  [
-#        ":internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+#cxx_test(
 #    name = "char_map_benchmark",
 #    srcs = ["internal/char_map_benchmark.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    tags = ["benchmark"],
-#    exported_deps =  [
+#    compiler_flags = ABSL_TEST_COPTS,
+#    deps = [
 #        ":internal",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
-#cc_test(
-#    name = "charconv_test",
-#    srcs = ["charconv_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    exported_deps =  [
-#        ":pow10_helper",
-#        ":str_format",
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "charconv_parse_test",
-#    srcs = [
-#        "internal/charconv_parse.h",
-#        "internal/charconv_parse_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:config",
-#        "//absl/base:raw_logging_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "charconv_bigint_test",
-#    srcs = [
-#        "internal/charconv_bigint.h",
-#        "internal/charconv_bigint_test.cc",
-#        "internal/charconv_parse.h",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    exported_deps =  [
-#        ":strings",
-#        "//absl/base:config",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
+
+cxx_test(
+    name = "charconv_test",
+    srcs = ["charconv_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":pow10_helper",
+        ":str_format",
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "charconv_parse_test",
+    srcs = [
+        "internal/charconv_parse.h",
+        "internal/charconv_parse_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:config",
+        "//absl/base:raw_logging_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "charconv_bigint_test",
+    srcs = [
+        "internal/charconv_bigint.h",
+        "internal/charconv_bigint_test.cc",
+        "internal/charconv_parse.h",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":strings",
+        "//absl/base:config",
+        "googletest//:gtest_main",
+    ],
+)
+
+# TODO
+#cxx_test(
 #    name = "charconv_benchmark",
 #    srcs = [
 #        "charconv_benchmark.cc",
 #    ],
-#    tags = [
-#        "benchmark",
-#    ],
-#    exported_deps =  [
+#    deps = [
 #        ":strings",
 #        "@com_github_google_benchmark//:benchmark_main",
 #    ],
 #)
-#
 
 cxx_library(
     name = "str_format",
     exported_headers = [
         "str_format.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":str_format_internal",
     ],
 )
@@ -1147,9 +1074,9 @@ cxx_library(
         "internal/str_format/output.h",
         "internal/str_format/parser.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":strings",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -1164,141 +1091,127 @@ cxx_library(
     ],
 )
 
-#cc_test(
-#    name = "str_format_test",
-#    srcs = ["str_format_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":str_format",
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_extension_test",
-#    srcs = [
-#        "internal/str_format/extension_test.cc",
-#    ],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format",
-#        ":str_format_internal",
-#        ":strings",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_arg_test",
-#    srcs = ["internal/str_format/arg_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format",
-#        ":str_format_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_bind_test",
-#    srcs = ["internal/str_format/bind_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_checker_test",
-#    srcs = ["internal/str_format/checker_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_convert_test",
-#    size = "medium",
-#    srcs = ["internal/str_format/convert_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format_internal",
-#        ":strings",
-#        "//absl/base:core_headers",
-#        "//absl/base:raw_logging_internal",
-#        "//absl/types:optional",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_output_test",
-#    srcs = ["internal/str_format/output_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":cord",
-#        ":str_format_internal",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_test(
-#    name = "str_format_parser_test",
-#    srcs = ["internal/str_format/parser_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format_internal",
-#        "//absl/base:core_headers",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cxx_library(
-#    name = "pow10_helper",
-#    testonly = True,
-#    srcs = ["internal/pow10_helper.cc"],
-#    exported_headers = ["internal/pow10_helper.h"],
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  ["//absl/base:config"],
-#)
-#
-#cc_test(
-#    name = "pow10_helper_test",
-#    srcs = ["internal/pow10_helper_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":pow10_helper",
-#        ":str_format",
-#        "@com_google_googletest//:gtest_main",
-#    ],
-#)
-#
-#cc_binary(
-#    name = "atod_manual_test",
-#    testonly = 1,
-#    srcs = ["atod_manual_test.cc"],
-#    copts = ABSL_TEST_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    visibility = ["//visibility:private"],
-#    exported_deps =  [
-#        ":str_format",
-#        ":strings",
-#        "//absl/base:base",
-#        "//absl/types:optional",
-#    ],
-#)
+cxx_test(
+    name = "str_format_test",
+    srcs = ["str_format_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":str_format",
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_extension_test",
+    srcs = [
+        "internal/str_format/extension_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format",
+        ":str_format_internal",
+        ":strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_arg_test",
+    srcs = ["internal/str_format/arg_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format",
+        ":str_format_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_bind_test",
+    srcs = ["internal/str_format/bind_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_checker_test",
+    srcs = ["internal/str_format/checker_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_convert_test",
+    srcs = ["internal/str_format/convert_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format_internal",
+        ":strings",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/types:optional",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_output_test",
+    srcs = ["internal/str_format/output_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":cord",
+        ":str_format_internal",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "str_format_parser_test",
+    srcs = ["internal/str_format/parser_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":str_format_internal",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "pow10_helper",
+    srcs = ["internal/pow10_helper.cc"],
+    exported_headers = ["internal/pow10_helper.h"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = ["//absl/base:config"],
+)
+
+cxx_test(
+    name = "pow10_helper_test",
+    srcs = ["internal/pow10_helper_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    deps = [
+        ":pow10_helper",
+        ":str_format",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_binary(
+    name = "atod_manual_test",
+    srcs = ["atod_manual_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":str_format",
+        ":strings",
+        "//absl/base:base",
+        "//absl/types:optional",
+    ],
+)

@@ -30,13 +30,14 @@ cxx_library(
         "internal/bits.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
     ],
 )
+
 #
 #cc_binary(
 #    name = "bits_benchmark",
@@ -77,15 +78,16 @@ cxx_library(
         "int128.h",
         "int128_have_intrinsic.inc",
         "int128_no_intrinsic.inc",
-        ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    ],
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     deps = [
         ":bits",
         "//absl/base:config",
         "//absl/base:core_headers",
     ],
 )
+
 #
 #cc_test(
 #    name = "int128_test",
@@ -124,8 +126,8 @@ cxx_library(
         "internal/representation.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:config",
     ],

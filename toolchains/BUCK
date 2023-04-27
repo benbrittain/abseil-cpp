@@ -4,6 +4,7 @@ load("@prelude//toolchains:python.bzl", "system_python_bootstrap_toolchain", "sy
 
 system_cxx_toolchain(
     name = "cxx",
+    cxx_flags = ["-std=c++17"],
     visibility = ["PUBLIC"],
 )
 

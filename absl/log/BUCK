@@ -1,17 +1,36 @@
-#load(
-#    "//absl:copts/configure_copts.bzl",
-#    "ABSL_DEFAULT_COPTS",
-#    "ABSL_DEFAULT_LINKOPTS",
-#    "ABSL_TEST_COPTS",
-#)
 #
+# Copyright 2022 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
+
+
+# Public targets
+
 cxx_library(
     name = "absl_check",
     exported_headers = ["absl_check.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    exported_deps = [
         "//absl/log/internal:check_impl",
     ],
 )
@@ -19,10 +38,10 @@ cxx_library(
 cxx_library(
     name = "absl_log",
     exported_headers = ["absl_log.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    exported_deps = [
         "//absl/log/internal:log_impl",
     ],
 )
@@ -30,9 +49,10 @@ cxx_library(
 cxx_library(
     name = "check",
     exported_headers = ["check.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         "//absl/log/internal:check_impl",
         "//absl/log/internal:check_op",
         "//absl/log/internal:conditions",
@@ -45,9 +65,10 @@ cxx_library(
     name = "die_if_null",
     srcs = ["die_if_null.cc"],
     exported_headers = ["die_if_null.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         ":log",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -59,10 +80,10 @@ cxx_library(
     name = "flags",
     srcs = ["flags.cc"],
     exported_headers = ["flags.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         ":globals",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -73,19 +94,18 @@ cxx_library(
         "//absl/log/internal:flags",
         "//absl/strings:strings",
     ],
-    # TODO
-#    # Binaries which do not access these flags from C++ still want this library linked in.
-#    alwayslink = True,
+    # Binaries which do not access these flags from C++ still want this library linked in.
+    # alwayslink = True,
 )
 
 cxx_library(
     name = "globals",
     srcs = ["globals.cc"],
     exported_headers = ["globals.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:atomic_hook",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -100,10 +120,10 @@ cxx_library(
     name = "initialize",
     srcs = ["initialize.cc"],
     exported_headers = ["initialize.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         ":globals",
         "//absl/base:config",
         "//absl/log/internal:globals",
@@ -114,9 +134,10 @@ cxx_library(
 cxx_library(
     name = "log",
     exported_headers = ["log.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         "//absl/log/internal:log_impl",
     ],
 )
@@ -125,10 +146,10 @@ cxx_library(
     name = "log_entry",
     srcs = ["log_entry.cc"],
     exported_headers = ["log_entry.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
         "//absl/base:log_severity",
@@ -143,10 +164,10 @@ cxx_library(
     name = "log_sink",
     srcs = ["log_sink.cc"],
     exported_headers = ["log_sink.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    exported_deps = [
         ":log_entry",
         "//absl/base:config",
     ],
@@ -155,10 +176,10 @@ cxx_library(
 cxx_library(
     name = "log_sink_registry",
     exported_headers = ["log_sink_registry.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    exported_deps = [
         ":log_sink",
         "//absl/base:config",
         "//absl/log/internal:log_sink_set",
@@ -168,9 +189,10 @@ cxx_library(
 cxx_library(
     name = "log_streamer",
     exported_headers = ["log_streamer.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         ":absl_log",
         "//absl/base:config",
         "//absl/base:log_severity",
@@ -182,13 +204,354 @@ cxx_library(
 )
 
 cxx_library(
+    name = "scoped_mock_log",
+    srcs = ["scoped_mock_log.cc"],
+    exported_headers = ["scoped_mock_log.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
+        ":log_entry",
+        ":log_sink",
+        ":log_sink_registry",
+        "//absl/base:config",
+        "//absl/base:log_severity",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_library(
     name = "structured",
     exported_headers = ["structured.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["PUBLIC"],
+    exported_deps = [
         "//absl/base:config",
         "//absl/log/internal:structured",
         "//absl/strings:strings",
     ],
 )
+
+# Test targets
+
+cxx_test(
+    name = "absl_check_test",
+    srcs = ["absl_check_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":absl_check",
+        ":check_test_impl",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "absl_log_basic_test",
+    srcs = ["absl_log_basic_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":absl_log",
+        ":log_basic_test_impl",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "check_test",
+    srcs = ["check_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":check",
+        ":check_test_impl",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "check_test_impl",
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_headers = ["check_test_impl.h"],
+    deps = [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/log/internal:test_helpers",
+        "//absl/status:status",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "die_if_null_test",
+    srcs = ["die_if_null_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":die_if_null",
+        "//absl/base:core_headers",
+        "//absl/log/internal:test_helpers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "flags_test",
+    srcs = ["flags_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":flags",
+        ":globals",
+        ":log",
+        ":scoped_mock_log",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/flags:flag",
+        "//absl/flags:reflection",
+        "//absl/log/internal:flags",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "globals_test",
+    srcs = ["globals_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":globals",
+        ":log",
+        ":scoped_mock_log",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/log/internal:globals",
+        "//absl/log/internal:test_helpers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_basic_test",
+    srcs = ["log_basic_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":log_basic_test_impl",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "log_basic_test_impl",
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_headers = ["log_basic_test_impl.h"],
+    deps = [
+        "//absl/base:base",
+        "//absl/base:log_severity",
+        "//absl/log:globals",
+        "//absl/log:log_entry",
+        "//absl/log:scoped_mock_log",
+        "//absl/log/internal:test_actions",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "log_entry_test",
+    srcs = ["log_entry_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log_entry",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/log/internal:append_truncated",
+        "//absl/log/internal:format",
+        "//absl/log/internal:test_helpers",
+        "//absl/strings:strings",
+        "//absl/time:time",
+        "//absl/types:span",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_format_test",
+    srcs = ["log_format_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":check",
+        ":log",
+        ":scoped_mock_log",
+        "//absl/log/internal:test_matchers",
+        "//absl/strings:strings",
+        "//absl/strings:str_format",
+        "//absl/types:optional",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_macro_hygiene_test",
+    srcs = ["log_macro_hygiene_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":scoped_mock_log",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_sink_test",
+    srcs = ["log_sink_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":log_sink",
+        ":log_sink_registry",
+        ":scoped_mock_log",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/log/internal:test_actions",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_streamer_test",
+    srcs = ["log_streamer_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":log_streamer",
+        ":scoped_mock_log",
+        "//absl/base:base",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/log/internal:test_actions",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "log_modifier_methods_test",
+    srcs = ["log_modifier_methods_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":log_sink",
+        ":scoped_mock_log",
+        "//absl/log/internal:test_actions",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "//absl/strings:strings",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "scoped_mock_log_test",
+    srcs = ["scoped_mock_log_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":globals",
+        ":log",
+        ":scoped_mock_log",
+        "//absl/base:core_headers",
+        "//absl/base:log_severity",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "//absl/memory:memory",
+        "//absl/strings:strings",
+        "//absl/synchronization:synchronization",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "stripping_test",
+    srcs = ["stripping_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    # This test requires all code live in the binary (instead of shared libraries)
+    # because we test for the existence of specific literals in the binary.
+    link_style = "static",
+    deps = [
+        ":check",
+        ":log",
+        "//absl/base:log_severity",
+        "//absl/base:strerror",
+        "//absl/flags:program_name",
+        "//absl/log/internal:test_helpers",
+        "//absl/strings:strings",
+        "//absl/strings:str_format",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "structured_test",
+    srcs = ["structured_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":log",
+        ":scoped_mock_log",
+        ":structured",
+        "//absl/base:core_headers",
+        "//absl/log/internal:test_helpers",
+        "//absl/log/internal:test_matchers",
+        "googletest//:gtest_main",
+    ],
+)
+
+#cxx_binary(
+#    name = "log_benchmark",
+#    srcs = ["log_benchmark.cc"],
+#    compiler_flags = ABSL_TEST_COPTS,
+#    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    deps = [
+#        ":check",
+#        ":flags",
+#        ":globals",
+#        ":log",
+#        ":log_entry",
+#        ":log_sink",
+#        ":log_sink_registry",
+#        "//absl/base:core_headers",
+#        "//absl/base:log_severity",
+#        "//absl/flags:flag",
+#        "//absl/log/internal:flags",
+#        "@com_github_google_benchmark//:benchmark_main",
+#    ],
+#)

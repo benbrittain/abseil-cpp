@@ -3,7 +3,7 @@ cxx_library(
     srcs = ["src/civil_time_detail.cc"],
     exported_headers = [
         "include/cctz/civil_time.h",
-        "include/cctz/civil_time_detail.h"
+        "include/cctz/civil_time_detail.h",
     ],
     visibility = ["PUBLIC"],
     deps = ["//absl/base:config"],
@@ -30,7 +30,7 @@ cxx_library(
         "src/time_zone_libc.h",
         "src/time_zone_posix.h",
         "src/tzfile.h",
-        ],
+    ],
     exported_headers = [
         "include/cctz/time_zone.h",
         "include/cctz/zone_info_source.h",

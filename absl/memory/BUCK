@@ -9,8 +9,8 @@ cxx_library(
     name = "memory",
     exported_headers = ["memory.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:core_headers",
         "//absl/meta:type_traits",

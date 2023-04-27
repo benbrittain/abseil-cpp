@@ -1,12 +1,11 @@
-
 cxx_library(
     name = "utility",
     exported_headers = [
         "utility.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:base_internal",
         "//absl/base:config",

@@ -15,9 +15,9 @@ cxx_library(
         "internal/cpu_detect.cc",
     ],
     exported_headers = ["internal/cpu_detect.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:base",
         "//absl/base:config",
     ],
@@ -30,15 +30,15 @@ cxx_library(
         "internal/crc_x86_arm_combined.cc",
     ],
     headers = [
-        ],
+    ],
     exported_headers = [
         "internal/crc_internal.h",
         "internal/crc.h",
         "internal/crc32_x86_arm_combined_simd.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":cpu_detect",
         "//absl/base:base",
         "//absl/base:config",
@@ -61,17 +61,17 @@ cxx_library(
         "internal/crc_non_temporal_memcpy.cc",
     ],
     headers = [
-        ],
+    ],
     exported_headers = [
         "internal/crc32c_inline.h",
         "crc32c.h",
         "internal/crc32c.h",
         "internal/crc_memcpy.h",
     ],
- #   copts = ABSL_DEFAULT_COPTS,
- #   linkopts = ABSL_DEFAULT_LINKOPTS,
+    #   copts = ABSL_DEFAULT_COPTS,
+    #   linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         ":cpu_detect",
         ":crc_internal",
         ":non_temporal_memcpy",
@@ -87,10 +87,10 @@ cxx_library(
 cxx_library(
     name = "non_temporal_arm_intrinsics",
     exported_headers = ["internal/non_temporal_arm_intrinsics.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-#    visibility = ["//visibility:private"],
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    visibility = ["//visibility:private"],
+    exported_deps = [
         "//absl/base:config",
     ],
 )
@@ -98,9 +98,9 @@ cxx_library(
 cxx_library(
     name = "non_temporal_memcpy",
     exported_headers = ["internal/non_temporal_memcpy.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":non_temporal_arm_intrinsics",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -111,10 +111,10 @@ cxx_library(
     name = "crc_cord_state",
     srcs = ["internal/crc_cord_state.cc"],
     exported_headers = ["internal/crc_cord_state.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["//absl/strings/..."],
-    exported_deps =  [
+    exported_deps = [
         ":crc32c",
         "//absl/base:config",
         "//absl/numeric:bits",

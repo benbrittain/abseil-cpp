@@ -12,10 +12,10 @@
 cxx_library(
     name = "any",
     exported_headers = ["any.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         ":bad_any_cast",
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -29,9 +29,9 @@ cxx_library(
     name = "bad_any_cast",
     exported_headers = ["bad_any_cast.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":bad_any_cast_impl",
         "//absl/base:config",
     ],
@@ -44,10 +44,10 @@ cxx_library(
     ],
     headers = [
         "bad_any_cast.h",
-        ],
+    ],
     #    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:raw_logging_internal",
     ],
@@ -59,10 +59,10 @@ cxx_library(
         "internal/span.h",
         "span.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         "//absl/algorithm:algorithm",
         "//absl/base:core_headers",
         "//absl/base:throw_delegate",
@@ -74,10 +74,10 @@ cxx_library(
     name = "optional",
     headers = ["internal/optional.h"],
     exported_headers = ["optional.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         ":bad_optional_access",
         "//absl/base:base_internal",
         "//absl/base:config",
@@ -92,10 +92,10 @@ cxx_library(
     name = "bad_optional_access",
     srcs = ["bad_optional_access.cc"],
     exported_headers = ["bad_optional_access.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:raw_logging_internal",
     ],
@@ -106,9 +106,9 @@ cxx_library(
     srcs = ["bad_variant_access.cc"],
     visibility = ["PUBLIC"],
     exported_headers = ["bad_variant_access.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:config",
         "//absl/base:raw_logging_internal",
     ],
@@ -119,9 +119,9 @@ cxx_library(
     headers = ["internal/variant.h"],
     exported_headers = ["variant.h"],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":bad_variant_access",
         "//absl/base:base_internal",
         "//absl/base:config",
@@ -134,10 +134,10 @@ cxx_library(
 cxx_library(
     name = "compare",
     exported_headers = ["compare.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["PUBLIC"],
-    exported_deps =  [
+    exported_deps = [
         "//absl/base:core_headers",
         "//absl/meta:type_traits",
     ],

@@ -19,9 +19,9 @@ cxx_library(
         "status_payload_printer.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         "//absl/base:atomic_hook",
         "//absl/base:core_headers",
         "//absl/base:raw_logging_internal",
@@ -36,6 +36,7 @@ cxx_library(
         "//absl/types:optional",
     ],
 )
+
 #
 #cc_test(
 #    name = "status_test",
@@ -58,13 +59,12 @@ cxx_library(
         "internal/statusor_internal.h",
     ],
     exported_headers = [
-
         "statusor.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
-    exported_deps =  [
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
+    exported_deps = [
         ":status",
         "//absl/base:base",
         "//absl/base:core_headers",

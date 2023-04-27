@@ -26,8 +26,8 @@
 cxx_library(
     name = "sample_recorder",
     exported_headers = ["internal/sample_recorder.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
@@ -38,6 +38,7 @@ cxx_library(
         "//absl/time:time",
     ],
 )
+
 #
 #cxx_test(
 #    name = "sample_recorder_test",
@@ -60,7 +61,7 @@ cxx_library(
     name = "exponential_biased",
     srcs = ["internal/exponential_biased.cc"],
     exported_headers = ["internal/exponential_biased.h"],
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],
@@ -69,6 +70,7 @@ cxx_library(
         "//absl/base:core_headers",
     ],
 )
+
 #
 #cxx_test(
 #    name = "exponential_biased_test",
@@ -88,8 +90,8 @@ cxx_library(
     name = "periodic_sampler",
     srcs = ["internal/periodic_sampler.cc"],
     exported_headers = ["internal/periodic_sampler.h"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/...",
     ],

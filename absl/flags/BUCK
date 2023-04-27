@@ -30,8 +30,8 @@ cxx_library(
     exported_headers = [
         "internal/path_util.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/flags/...",
     ],
@@ -49,8 +49,8 @@ cxx_library(
     exported_headers = [
         "internal/program_name.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/flags/...",
         "//absl/log/...",
@@ -74,8 +74,8 @@ cxx_library(
         "config.h",
         "usage_config.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":path_util",
         ":program_name",
@@ -95,8 +95,8 @@ cxx_library(
     exported_headers = [
         "marshalling.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:config",
         "//absl/base:core_headers",
@@ -115,8 +115,8 @@ cxx_library(
     exported_headers = [
         "internal/commandlineflag.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:config",
         "//absl/base:fast_type_id",
@@ -132,8 +132,8 @@ cxx_library(
     exported_headers = [
         "commandlineflag.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":commandlineflag_internal",
         "//absl/base:config",
@@ -151,8 +151,8 @@ cxx_library(
     exported_headers = [
         "internal/private_handle_accessor.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/flags/...",
     ],
@@ -174,8 +174,8 @@ cxx_library(
         "internal/registry.h",
         "reflection.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":commandlineflag",
         ":commandlineflag_internal",
@@ -198,8 +198,8 @@ cxx_library(
         "internal/flag.h",
         "internal/sequence_lock.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = ["//absl/base/..."],
     exported_deps = [
         ":commandlineflag",
@@ -226,14 +226,14 @@ cxx_library(
     ],
     headers = [
         "internal/flag_msvc.inc",
-        ],
+    ],
     visibility = ["PUBLIC"],
     exported_headers = [
         "declare.h",
         "flag.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":config",
         ":flag_internal",
@@ -253,8 +253,8 @@ cxx_library(
     exported_headers = [
         "internal/usage.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     visibility = [
         "//absl/flags/...",
     ],
@@ -283,8 +283,8 @@ cxx_library(
     exported_headers = [
         "usage.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":usage_internal",
         "//absl/base:config",
@@ -303,8 +303,8 @@ cxx_library(
         "internal/parse.h",
         "parse.h",
     ],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         ":commandlineflag",
         ":commandlineflag_internal",
@@ -326,7 +326,7 @@ cxx_library(
 
 # ############################################################################
 # # Unit tests in alphabetical order.
-# 
+#
 # cxx_test(
 #     name = "commandlineflag_test",
 #     size = "small",
@@ -354,7 +354,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "config_test",
 #     size = "small",
@@ -368,7 +368,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "flag_test",
 #     size = "small",
@@ -398,7 +398,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_binary(
 #     name = "flag_benchmark",
 #     testonly = 1,
@@ -423,7 +423,7 @@ cxx_library(
 #         "@com_github_google_benchmark//:benchmark_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "marshalling_test",
 #     size = "small",
@@ -437,7 +437,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "parse_test",
 #     size = "small",
@@ -465,7 +465,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "path_util_test",
 #     size = "small",
@@ -479,7 +479,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "program_name_test",
 #     size = "small",
@@ -495,7 +495,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "reflection_test",
 #     size = "small",
@@ -522,7 +522,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "sequence_lock_test",
 #     size = "small",
@@ -542,7 +542,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "usage_config_test",
 #     size = "small",
@@ -559,7 +559,7 @@ cxx_library(
 #         "@com_google_googletest//:gtest_main",
 #     ],
 # )
-# 
+#
 # cxx_test(
 #     name = "usage_test",
 #     size = "small",

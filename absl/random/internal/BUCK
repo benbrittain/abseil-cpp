@@ -1,0 +1,725 @@
+#
+# Copyright 2019 The Abseil Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Internal-only implementation classes for Abseil Random
+load(
+    "//absl/copts:configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_RANDOM_RANDEN_COPTS",
+    "ABSL_TEST_COPTS",
+#    "absl_random_randen_copts_init",
+)
+
+cxx_library(
+    name = "traits",
+    exported_headers = ["traits.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/numeric:bits",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_library(
+    name = "distribution_caller",
+    exported_headers = ["distribution_caller.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/base:fast_type_id",
+        "//absl/utility:utility",
+    ],
+)
+
+cxx_library(
+    name = "fast_uniform_bits",
+    exported_headers = [
+        "fast_uniform_bits.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":traits",
+        "//absl/base:config",
+        "//absl/meta:type_traits",
+    ],
+)
+
+cxx_library(
+    name = "seed_material",
+    srcs = [
+        "seed_material.cc",
+    ],
+    exported_headers = [
+        "seed_material.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+#    + select({
+#        "//absl:msvc_compiler": ["-DEFAULTLIB:bcrypt.lib"],
+#        "//absl:clang-cl_compiler": ["-DEFAULTLIB:bcrypt.lib"],
+#        "//absl:mingw_compiler": [
+#            "-DEFAULTLIB:bcrypt.lib",
+#            "-lbcrypt",
+#        ],
+#        "//conditions:default": [],
+#    }),
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":fast_uniform_bits",
+        "//absl/base:core_headers",
+        "//absl/base:dynamic_annotations",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+        "//absl/types:optional",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "pool_urbg",
+    srcs = [
+        "pool_urbg.cc",
+    ],
+    headers = [
+        "pool_urbg.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ["-pthread"] + ABSL_DEFAULT_LINKOPTS,
+#        "//absl:msvc_compiler": [],
+#        "//absl:clang-cl_compiler": [],
+#        "//absl:wasm": [],
+#        "//conditions:default": ["-pthread"],
+#    }) + ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":randen",
+        ":seed_material",
+        ":traits",
+        "//absl/base:base",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:endian",
+        "//absl/base:raw_logging_internal",
+        "//absl/random:seed_gen_exception",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "explicit_seed_seq",
+    exported_headers = [
+        "explicit_seed_seq.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/base:endian",
+    ],
+)
+
+cxx_library(
+    name = "sequence_urbg",
+    exported_headers = [
+        "sequence_urbg.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = ["//absl/base:config"],
+)
+
+cxx_library(
+    name = "salted_seed_seq",
+    exported_headers = [
+        "salted_seed_seq.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":seed_material",
+        "//absl/container:inlined_vector",
+        "//absl/meta:type_traits",
+        "//absl/types:optional",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "iostream_state_saver",
+    exported_headers = ["iostream_state_saver.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/meta:type_traits",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_library(
+    name = "generate_real",
+    exported_headers = [
+        "generate_real.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":fastmath",
+        ":traits",
+        "//absl/meta:type_traits",
+        "//absl/numeric:bits",
+    ],
+)
+
+cxx_library(
+    name = "fastmath",
+    exported_headers = [
+        "fastmath.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = ["//absl/numeric:bits"],
+)
+
+cxx_library(
+    name = "wide_multiply",
+    exported_headers = ["wide_multiply.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":traits",
+        "//absl/base:config",
+        "//absl/numeric:bits",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_library(
+    name = "nonsecure_base",
+    exported_headers = ["nonsecure_base.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":pool_urbg",
+        ":salted_seed_seq",
+        ":seed_material",
+        "//absl/base:core_headers",
+        "//absl/container:inlined_vector",
+        "//absl/meta:type_traits",
+        "//absl/types:span",
+    ],
+)
+
+cxx_library(
+    name = "pcg_engine",
+    exported_headers = ["pcg_engine.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":fastmath",
+        ":iostream_state_saver",
+        "//absl/base:config",
+        "//absl/meta:type_traits",
+        "//absl/numeric:bits",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_library(
+    name = "randen_engine",
+    exported_headers = ["randen_engine.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":iostream_state_saver",
+        ":randen",
+        "//absl/base:endian",
+        "//absl/meta:type_traits",
+    ],
+)
+
+cxx_library(
+    name = "platform",
+    srcs = [
+        "randen_round_keys.cc",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_headers = [
+        "randen_traits.h",
+        "platform.h",
+    ],
+    visibility = ["//absl/random/..."],
+    exported_deps = ["//absl/base:config"],
+)
+
+cxx_library(
+    name = "randen",
+    srcs = [
+        "randen.cc",
+    ],
+    exported_headers = [
+        "randen.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":platform",
+        ":randen_hwaes",
+        ":randen_slow",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "randen_slow",
+    srcs = ["randen_slow.cc"],
+    exported_headers = ["randen_slow.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":platform",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:endian",
+        "//absl/numeric:int128",
+    ],
+)
+
+#absl_random_randen_copts_init()
+
+cxx_library(
+    name = "randen_hwaes",
+    srcs = [
+        "randen_detect.cc",
+    ],
+    exported_headers = [
+        "randen_detect.h",
+        "randen_hwaes.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":platform",
+        ":randen_hwaes_impl",
+        "//absl/base:config",
+    ],
+)
+
+# build with --save_temps to see assembly language output.
+cxx_library(
+    name = "randen_hwaes_impl",
+    srcs = [
+        "randen_hwaes.cc",
+    ],
+    exported_headers = [
+        "randen_hwaes.h",
+        ],
+    compiler_flags = ABSL_DEFAULT_COPTS + ABSL_RANDOM_RANDEN_COPTS + ["-Wno-pass-failed"],
+#        "//absl:msvc_compiler": [],
+#        "//absl:clang-cl_compiler": [],
+#    }),
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":platform",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_binary(
+    name = "gaussian_distribution_gentables",
+    srcs = [
+        "gaussian_distribution_gentables.cc",
+    ],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//absl/base:core_headers",
+        "//absl/random:distributions",
+    ],
+)
+
+cxx_library(
+    name = "distribution_test_util",
+    srcs = [
+        "chi_square.cc",
+        "distribution_test_util.cc",
+    ],
+    exported_headers = [
+        "chi_square.h",
+        "distribution_test_util.h",
+    ],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+        "//absl/strings:str_format",
+        "//absl/types:span",
+    ],
+)
+
+cxx_test(
+    name = "traits_test",
+    srcs = ["traits_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":traits",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "generate_real_test",
+    srcs = [
+        "generate_real_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":generate_real",
+        "//absl/flags:flag",
+        "//absl/numeric:bits",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "distribution_test_util_test",
+    srcs = ["distribution_test_util_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":distribution_test_util",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "fastmath_test",
+    srcs = ["fastmath_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":fastmath",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "explicit_seed_seq_test",
+    srcs = ["explicit_seed_seq_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":explicit_seed_seq",
+        "//absl/random:seed_sequences",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "salted_seed_seq_test",
+    srcs = ["salted_seed_seq_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":salted_seed_seq",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "chi_square_test",
+    srcs = [
+        "chi_square_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":distribution_test_util",
+        "//absl/base:core_headers",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "fast_uniform_bits_test",
+    srcs = [
+        "fast_uniform_bits_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":fast_uniform_bits",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "mock_helpers",
+    exported_headers = ["mock_helpers.h"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        "//absl/base:fast_type_id",
+        "//absl/types:optional",
+    ],
+)
+
+cxx_library(
+    name = "mock_overload_set",
+    exported_headers = ["mock_overload_set.h"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    deps = [
+        ":mock_helpers",
+        "//absl/random:mocking_bit_gen",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "nonsecure_base_test",
+    srcs = [
+        "nonsecure_base_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":nonsecure_base",
+        "//absl/random:random",
+        "//absl/random:distributions",
+        "//absl/random:seed_sequences",
+        "//absl/strings:strings",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "seed_material_test",
+    srcs = ["seed_material_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":seed_material",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "pool_urbg_test",
+    srcs = [
+        "pool_urbg_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":pool_urbg",
+        "//absl/meta:type_traits",
+        "//absl/types:span",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "pcg_engine_test",
+    srcs = ["pcg_engine_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":explicit_seed_seq",
+        ":pcg_engine",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "randen_engine_test",
+    srcs = [
+        "randen_engine_test.cc",
+    ],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":explicit_seed_seq",
+        ":randen_engine",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+        "//absl/time:time",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "randen_test",
+    srcs = ["randen_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":randen",
+        "//absl/meta:type_traits",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "randen_slow_test",
+    srcs = ["randen_slow_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":platform",
+        ":randen_slow",
+        "//absl/base:endian",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "randen_hwaes_test",
+    srcs = ["randen_hwaes_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS + ABSL_RANDOM_RANDEN_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":platform",
+        ":randen_hwaes",
+        ":randen_hwaes_impl",  # build_cleaner: keep
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:str_format",
+        "googletest//:gtest",
+    ],
+)
+
+cxx_test(
+    name = "wide_multiply_test",
+    srcs = ["wide_multiply_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":wide_multiply",
+        "//absl/numeric:bits",
+        "//absl/numeric:int128",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_library(
+    name = "nanobenchmark",
+    srcs = ["nanobenchmark.cc"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    exported_headers = ["nanobenchmark.h"],
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":platform",
+        ":randen_engine",
+        "//absl/base:config",
+        "//absl/base:core_headers",
+        "//absl/base:raw_logging_internal",
+    ],
+)
+
+cxx_library(
+    name = "uniform_helper",
+    exported_headers = ["uniform_helper.h"],
+    compiler_flags = ABSL_DEFAULT_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//absl/random/..."],
+    exported_deps = [
+        ":traits",
+        "//absl/base:config",
+        "//absl/meta:type_traits",
+        "//absl/numeric:int128",
+    ],
+)
+
+cxx_test(
+    name = "nanobenchmark_test",
+    srcs = ["nanobenchmark_test.cc"],
+#    flaky = 1,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":nanobenchmark",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_test(
+    name = "randen_benchmarks",
+    srcs = ["randen_benchmarks.cc"],
+    compiler_flags = ABSL_TEST_COPTS + ABSL_RANDOM_RANDEN_COPTS,
+###    flaky = 1,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":nanobenchmark",
+        ":platform",
+        ":randen",
+        ":randen_engine",
+        ":randen_hwaes",
+        ":randen_hwaes_impl",
+        ":randen_slow",
+        "//absl/base:raw_logging_internal",
+        "//absl/strings:strings",
+    ],
+)
+
+cxx_test(
+    name = "iostream_state_saver_test",
+    srcs = ["iostream_state_saver_test.cc"],
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":iostream_state_saver",
+        "googletest//:gtest_main",
+    ],
+)
+
+cxx_test(
+    name = "uniform_helper_test",
+    srcs = ["uniform_helper_test.cc"],
+    compiler_flags = ABSL_TEST_COPTS,
+    linker_flags = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":uniform_helper",
+        "googletest//:gtest_main",
+    ],
+)

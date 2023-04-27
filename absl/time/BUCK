@@ -15,8 +15,8 @@ cxx_library(
         "time.h",
     ],
     visibility = ["PUBLIC"],
-#    copts = ABSL_DEFAULT_COPTS,
-#    linkopts = ABSL_DEFAULT_LINKOPTS,
+    #    copts = ABSL_DEFAULT_COPTS,
+    #    linkopts = ABSL_DEFAULT_LINKOPTS,
     exported_deps = [
         "//absl/base:base",
         "//absl/base:config",
